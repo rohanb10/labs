@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Clock demo</title>
+</head>
+<style type="text/css">
+	#clock {margin-top: 20em}
+	.container{margin:-75px auto;width:155px;height:200px}
+	
+	.container,.numbers{position:relative}
+	.hands,.line,.hour,.minute,.second,.center,.arm,.bell,.hammer{position:absolute}
+	
+	.hands,.numbers{background:aliceblue;border-radius:50%}
+	.hands{top:23px;left:23px;z-index:3;width:109px;height:109px}
+	.numbers{margin:10em auto;z-index:2;border:15px solid mediumslateblue;width:125px;height:125px}
+
+	.line{left:50%;margin-left:-3px;background: #565656;width:6px;height:126px}
+	.line-1-7 {transform:rotate(30deg)}
+	.line-2-8 {transform:rotate(60deg)}
+	.line-3-9 {transform:rotate(90deg)}
+	.line-4-10{transform:rotate(-60deg)}
+	.line-5-11{transform:rotate(-30deg)}
+	.line-1-7,.line-5-11,.line-2-8,.line-4-10{margin-left:0;width:2px}
+
+	.hour,.minute{border-radius:50px;width:8px;background:#222}
+	.hour{top:50%;left:50%;z-index:5;margin-left:-3px;transform-origin:top;height:35px}
+	.minute{top:5px;left:55px;z-index:3;margin-left:-4px;transform-origin:bottom;height:50px}
+	.second{top:5px;left:56px;z-index:5;margin-left:-2px;background:orangered;transform-origin:bottom;width:2px;height:50px;animation: tick-tock 60s steps(60,end) infinite}
+
+	.center{top:62px;z-index:20;border-radius:50%;margin-top:-15px;left:55px;margin-left:-8px;width:16px;height:16px; background:mediumpurple}
+
+	.arm{top:-50px;left:73px;z-index:1;background:darkgrey;transform:rotate(-30deg);width:10px;height:230px;border-radius:50px}
+	.arm:nth-child(2n){transform:rotate(30deg)}
+	.bell{top:-30px;z-index:2;border-radius:50% 50% 10% 10%;transform:rotate(-30deg);width:65px;height:35px; background:gold}
+	.bell-right{left:90px;transform:rotate(30deg)}
+</style>
+<!-- Modified version of https://codepen.io/jonitrythall/pen/slvmi -->
+<body>
+	<div id="clock">
+		<div class="container">
+			<div class="hands">
+				<div class="hour"></div>
+				<div class="minute"></div>
+				<div class="second"></div>
+				<div class="center"></div>
+			</div> 
+
+			<div class="numbers">
+				<div class="line line-6-12"></div>
+				<div class="line line-3-9 "></div>
+				<div class="line line-1-7 "></div>
+				<div class="line line-5-11"></div>
+				<div class="line line-2-8 "></div>
+				<div class="line line-4-10"></div>
+			</div>
+
+			<div class="arm"></div>
+			<div class="arm"></div>
+
+			<div class="bell bell-left"></div>
+			<div class="bell bell-right"></div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function setupClock() {
+			var NOW = new Date();
+			var currentSecond = parseInt(NOW.getSeconds());
+			var currentMin = parseInt(NOW.getMinutes());
+			var currentHour = parseInt(NOW.getHours());
+			var rotate = num => `rotate(${num}deg)`;
+
+			document.querySelector('.second').style.transform = rotate(currentSecond * 6);
+			document.querySelector('.minute').style.transform = rotate(currentMin * 6);
+			document.querySelector('.hour').style.transform = rotate(180 + ((currentHour % 12) * 30));
+
+			setTimeout(function moveSecondHand() {
+				document.querySelector('.second').style.transform = rotate(++currentSecond * 6);
+				if (currentSecond % 60 === 0) document.querySelector('.minute').style.transform = rotate(++currentMin * 6);
+				if (currentMin % 60 === 0) document.querySelector('.hour').style.transform = rotate(180 + ((++currentHour % 12) * 30));
+				setTimeout(moveSecondHand, 1000)
+			}, 1000)
+		}
+		setupClock();
+	</script>
+</body>
+</html>
